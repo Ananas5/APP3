@@ -78,12 +78,17 @@ for i in dic:
         G.add_edge(i,j)
 
 options = {
-    'node_color': 'cyan',
     'node_size': 200,
     'width': 1,
     'arrowstyle': '-|>',
     'arrowsize': 8}
-nx.draw_networkx(G, arrows=True,with_labels=True, **options)
+color=[]
+for node in G:
+    if node in best_leaders(dic):
+        color.append("red")
+    else:
+        color.append("cyan")
+nx.draw_networkx(G, node_color=color, arrows=True,with_labels=True, **options)
 
 """the two most important leaders: 1 and 2
 the two best followers 3 and (1,4,5,7,8)
