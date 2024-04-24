@@ -1,5 +1,7 @@
 ###example
 import numpy as np
+import networkx as nx
+
 file=open("exemple.txt","r")
 lines=file.readlines()
 dic={}
@@ -68,6 +70,20 @@ def best_followers(dic):
 print(adjacency(dic))
 print(best_leaders(dic))
 print(best_followers(dic))
+
+
+G=nx.DiGraph()
+for i in dic:
+    for j in dic[i]:
+        G.add_edge(i,j)
+
+options = {
+    'node_color': 'cyan',
+    'node_size': 200,
+    'width': 1,
+    'arrowstyle': '-|>',
+    'arrowsize': 8}
+nx.draw_networkx(G, arrows=True,with_labels=True, **options)
 
 """the two most important leaders: 1 and 2
 the two best followers 3 and (1,4,5,7,8)
