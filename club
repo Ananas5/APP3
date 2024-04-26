@@ -48,3 +48,41 @@ def bfs(G, s):
 
 print(bfs(dic, 'B'))
 '''
+
+
+
+Question1 et 2 
+
+file = open("/Users/Victoria/Desktop/club.txt", "r")
+lines = file.readlines()
+dic = {}
+
+#create a dict a key and the values to which they are inked (no changes from jade)
+for l in lines[1:]:  
+    if "\n" in l:
+        l = l[:-1] 
+    line = l.split(",")
+    if int(line[0]) not in dic:
+        dic[int(line[0])] = [int(line[1])]
+    else:
+        dic[int(line[0])].append(int(line[1]))
+
+#create adjacent matrix => changes a little from jade bc it did not work 
+def adjacency(dic):
+    adj = np.zeros((34, 34), dtype=int)
+    for key, values in dic.items():
+        for value in values:
+            adj[key-1][value-1] = 1  
+            adj[value-1][key-1] = 1  
+    return adj
+
+#calculate the adjacent matrix 
+adjacency_matrix = adjacency(dic)
+print(adjacency_matrix)
+
+# Calculate the nodes importancy 
+node_importance = in_degrees + out_degrees
+
+#find the leaders 
+top_two_leaders = np.argsort(node_importance)[-2:][::-1] + 1
+print( top_two_leaders)
