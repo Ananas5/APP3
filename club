@@ -86,3 +86,32 @@ node_importance = in_degrees + out_degrees
 #find the leaders 
 top_two_leaders = np.argsort(node_importance)[-2:][::-1] + 1
 print( top_two_leaders)
+
+Question 5
+
+import numpy as np
+import matplotlib.pyplot as plt
+import networkx as nx
+
+G = nx.Graph()
+
+# Add graph edges using the adjacency dictionary
+for node, neighbors in dic.items():
+    for neighbor in neighbors:
+        G.add_edge(node, neighbor)
+
+# Degree calculation for each node
+degree = nx.degree(G)
+
+# Find the maximum degree
+max_degree = max(degree, key=lambda x: x[1])[1]
+
+# Identify the leaders 
+leaders = [node for node, deg in degree if deg == max_degree]
+
+# graph
+plt.figure(figsize=(10, 8))
+pos = nx.spring_layout(G)  # Positionnement des nœuds
+nx.draw(G, pos, with_labels=True, node_color=['blue' if node in leaders else 'red' for node in G.nodes()])
+plt.title('Graphe avec les leaders en bleu')
+plt.show()
