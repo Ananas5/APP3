@@ -66,16 +66,20 @@ def best_followers(dic):
             best.append(i+1)
     return best[:2]
 
-def path (node1,node2):
-    if node1==node2:
-        return node2
-    else:
-        if node1 in dic:
-            for i in dic[node1]:
-                if i in dic or i==node2:
-                    return node1,path(i,node2)
+def BFS(graph, vertex):
+    to_study=[vertex]
+    done=[vertex]
+    while to_study!=[]:
+        s=to_study.pop(0)
+        for v in graph[s]:
+            #verrify that we didn't already saw the node
+            #AND in directed graph: verrify that the node follows someone 
+            if v not in done and v in list(graph.keys()): 
+                to_study.append(v)
+                done.append(v)
+    return done
 
-print(path(1,2))
+print(BFS(dic,1)) #path
 print(adjacency(dic))
 print(best_leaders(dic))
 print(best_followers(dic))
