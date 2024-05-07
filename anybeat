@@ -1,0 +1,68 @@
+import numpy as np
+import networkx as nx
+
+
+file=open("anybeatAnonymized.csv","r")
+#file=open("club.txt","r")
+lines=file.readlines()
+
+dic={}
+
+for l in lines[1:]:
+    """if "\n" in l:
+        l=l[:-1]"""
+    line=l.split(",")
+    if int(line[0]) not in dic:
+        dic[int(line[0])]=[int(line[1])]
+    else:
+        dic[int(line[0])].append(int(line[1]))
+
+
+def adjacency(dic):
+    adj=np.zeros((12645,12645),dtype=int) #12645
+    for key in dic:
+        for val in dic[key]:
+            adj[key-1][val-1]=1
+            adj[val-1][key-1]=1
+    return adj
+
+adj=adjacency(dic)
+
+def degrees(adj):
+    deg={}
+    for i in range (len(adj)):
+        deg[i+1]=sum(adj[i])
+    return deg
+        
+deg=degrees(adj)
+
+def best_leaders(deg,n=int(input("how many best: "))):
+    best=[(0,0)]*n #(node value, node degree)
+    for i in deg:
+        x=0
+        while x!=n:
+            if best[x][1]<deg[i]:
+                best.pop(-1)
+                best.insert(x,(i,deg[i]))
+                x=n
+            else:
+                x+=1
+    return best
+
+best=best_leaders(deg)
+
+def followers_leaders (adj,best_lead):
+    folo={}
+    for lead in best_lead:
+        folo[lead[0]]=[]
+        adj_folo=adj[lead[0]-1]
+        for i in range(len(adj_folo)):
+            if adj_folo[i]==1:
+                folo[lead[0]].append(i+1)
+    return folo
+
+fol=followers_leaders(adj, best)
+
+
+            
+    
