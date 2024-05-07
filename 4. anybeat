@@ -3,14 +3,11 @@ import networkx as nx
 
 
 file=open("anybeatAnonymized.csv","r")
-#file=open("club.txt","r")
 lines=file.readlines()
 
 dic={}
 
 for l in lines[1:]:
-    """if "\n" in l:
-        l=l[:-1]"""
     line=l.split(",")
     if int(line[0]) not in dic:
         dic[int(line[0])]=[int(line[1])]
