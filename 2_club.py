@@ -51,7 +51,7 @@ print(bfs(dic, 'B'))
 
 
 
-Question1 et 2 
+#Question 1 et 2 
 
 file = open("/Users/Victoria/Desktop/club.txt", "r")
 lines = file.readlines()
@@ -87,7 +87,7 @@ node_importance = in_degrees + out_degrees
 top_two_leaders = np.argsort(node_importance)[-2:][::-1] + 1
 print( top_two_leaders)
 
-Question 5
+#Question 5
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -100,8 +100,9 @@ for node, neighbors in dic.items():
     for neighbor in neighbors:
         G.add_edge(node, neighbor)
 
+
 # Degree calculation for each node
-degree = nx.degree(G)
+degree = nx.degree(G) """we can't use it"""
 
 # Find the maximum degree
 max_degree = max(degree, key=lambda x: x[1])[1]
