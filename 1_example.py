@@ -21,6 +21,8 @@ def adjacency(dic):
         for val in dic[key]:
             adj[key-1][val-1]=1
     return adj
+print(adjacency(dic))
+
 
 def leaders(adj):
     long=len(adj)
@@ -43,6 +45,8 @@ def best_leaders(dic):
         else:
             best.append(i+1)
     return best[:2]
+print(best_leaders(dic))
+"""the two most important leaders: 1 and 2"""
 
 def followers(adj):
     long=len(adj)
@@ -65,6 +69,8 @@ def best_followers(dic):
         else:
             best.append(i+1)
     return best[:2]
+print(best_followers(dic))
+"""the two best followers 3 and (1,4,5,7,8)"""
 
 def BFS(graph, vertex):
     to_study=[vertex]
@@ -78,11 +84,9 @@ def BFS(graph, vertex):
                 to_study.append(v)
                 done.append(v)
     return done
-
 print(BFS(dic,1)) #path
-print(adjacency(dic))
-print(best_leaders(dic))
-print(best_followers(dic))
+"""shortest path between the two leaders (1 an 2): 1 => 3 => 2 
+not possible in the other way because 2 do not follow someone"""
 
 
 G=nx.DiGraph()
@@ -102,9 +106,3 @@ for node in G:
     else:
         color.append("cyan")
 nx.draw_networkx(G, node_color=color, arrows=True,with_labels=True, **options)
-
-"""the two most important leaders: 1 and 2
-the two best followers 3 and (1,4,5,7,8)
-shortest path between the two leaders (1 an 2): 1 => 3 => 2 
-not possible in the other way because 2 do not follow someone
-need to draw the graph"""
