@@ -25,6 +25,7 @@ def adjacency(dic):
     return adj
 
 adj=adjacency(dic)
+#print("adjacency: ", adj)
 
 def degrees(adj):
     deg={}
@@ -32,7 +33,8 @@ def degrees(adj):
         deg[i+1]=sum(adj[i])
     return deg
         
-#deg=degrees(adj)
+deg=degrees(adj)
+print("number of neighboors: ", deg)
 
 def best_leaders(deg,n): #n = number of best leaders
     best=[(0,0)]*n #(node value, node degree)
@@ -47,7 +49,8 @@ def best_leaders(deg,n): #n = number of best leaders
                 x+=1
     return best
 
-#best=best_leaders(deg)
+best=best_leaders(deg,2)
+print("(best leaders, number of followers): ", best)
 
 def followers (adj,node): #neighboors
     folo=[]
@@ -63,28 +66,28 @@ def followers_leaders (adj,best_lead):
         folo[lead[0]]=followers(adj,lead[0])
     return folo
 
-#fol=followers_leaders(adj, best)
+fol=followers_leaders(adj, best)
+print("followers of best leaders: ", fol)
 
-
-"""need to
-    Identify the most important path in the whole graph.
-    Draw the graph and display the path.
-    """ 
-    
 def BFS(adj, node):
     to_study=[node]
-    done=[node]
+    done={node:0} #0 distance
     while to_study!=[]:
         s=to_study.pop(0)
         for v in followers(adj,s):
             #verrify that we didn't already saw the node
-            #AND in directed graph: verrify that the node follows someone 
-            if v not in done: 
+            
+            if v not in done:
                 to_study.append(v)
-                done.append(v)
-    return done
+                done[v]=done[s]+1 #distance
+    return done, s #dico nodes:distance, last node visited (farthest node)
 
-#bbb=BFS(adj,60)
+"""To found the longest (most important) path using two BFSs.
+We start BFS from any node x (for example 1) and find a node with the longest distance from x (the endpoint)
+We use a second BFS from this endpoint to find the longest path."""
+bfs1=BFS(adj,1)
+bfs2=BFS(adj,bfs1[1])
+print("Most important path in the graph from", bfs1[1], "to", bfs2[1], "with a distance of: ", bfs2[0][bfs2[1]] )
 
 G=nx.Graph()
 for i in dic:
@@ -92,12 +95,13 @@ for i in dic:
         G.add_edge(i,j)
 
 options = {
-    'node_size': 200,
-    'width': 1,
-    'arrowstyle': '-|>',
-    'arrowsize': 8,
-    'node_color': 'blue'}
+    'node_size': 1,
+    'width': 0.05,
+    'font_size':10,
+    'node_color': 'cyan'}
 
-nx.draw_networkx(G,with_labels=True, **options)
-       
+nx.draw_networkx(G,with_labels=False, **options)
+
+"""It's hard to read the graph
+Need to display the path"""
    
