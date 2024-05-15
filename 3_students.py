@@ -1,6 +1,8 @@
 import numpy as np
 import networkx as nx
 
+############Still need to do qt about shortest path between 5 best followers!!!!!!!!!!!!!!!!
+
 file=open("students.csv","r")
 lines=file.readlines()
 dic={}
