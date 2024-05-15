@@ -189,8 +189,7 @@ options = {
 color=[]
 for node in G:
     if node in bestLeaders(lead):
-        print('yes')
         color.append("red")
     else:
-        color.append("cyan")
+        color.append("white")
 nx.draw_networkx(G, node_color=color, arrows=True,with_labels=True, **options)
