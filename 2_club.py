@@ -6,7 +6,7 @@ file=open("/home/jade/ESME/Advanced Algorithms (python)/APP3/club.txt","r")
 lines=file.readlines()
 dic={}
 
-#Question 1 et 2 
+#Question 1 
 
 file = open("/Users/Victoria/Desktop/club.txt", "r")
 lines = file.readlines()
@@ -35,12 +35,26 @@ def adjacency(dic):
 adjacency_matrix = adjacency(dic)
 print(adjacency_matrix)
 
+
+#question 2
 # Calculate the nodes importancy 
 node_importance = in_degrees + out_degrees
 
-#find the leaders 
+#find the leaders
 top_two_leaders = np.argsort(node_importance)[-2:][::-1] + 1
 print( top_two_leaders)
+
+# Find the top two leaders
+top_two_leaders = sorted(degree_centrality, key=degree_centrality.get, reverse=True)[:2]
+print("Top two leaders:", top_two_leaders)
+
+#question 3
+# Identify the best followers
+all_nodes = set(dic.keys())
+follower_candidates = all_nodes - set(top_two_leaders)  # Exclude top leaders
+follower_importance = {node: degree_centrality[node] for node in follower_candidates}
+best_followers = sorted(follower_importance, key=follower_importance.get, reverse=True)
+print("Best followers:", best_followers)
 
 #Question 5
 
