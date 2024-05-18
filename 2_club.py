@@ -56,6 +56,12 @@ follower_importance = {node: degree_centrality[node] for node in follower_candid
 best_followers = sorted(follower_importance, key=follower_importance.get, reverse=True)
 print("Best followers:", best_followers)
 
+#question4
+# Best path 
+leader1, leader2 = top_two_leaders
+shortest_path = nx.shortest_path(G, source=leader1-1, target=leader2-1)  # Adjust node indexing
+print("Shortest path between the two leaders:", shortest_path)
+
 #Question 5
 
 G = nx.Graph()
