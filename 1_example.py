@@ -72,20 +72,24 @@ def best_followers(dic):
 print(best_followers(dic))
 """the two best followers 3 and (1,4,5,7,8)"""
 
-def BFS(graph, vertex):
+def BFS(graph, vertex, node):
     to_study=[vertex]
     done=[vertex]
     while to_study!=[]:
         s=to_study.pop(0)
         for v in graph[s]:
+            if v==node:
+                done.append(node)
+                return done
             #verrify that we didn't already saw the node
             #AND in directed graph: verrify that the node follows someone 
-            if v not in done and v in list(graph.keys()): 
+            elif v not in done and v in list(graph.keys()): 
                 to_study.append(v)
                 done.append(v)
-    return done
-print(BFS(dic,1)) #path
-"""shortest path between the two leaders (1 an 2): 1 => 3 => 2 
+    return "No path between your nodes try in the other direction"
+    
+print(BFS(dic,1,2)) #path
+"""shortest path between the two leaders (1 and 2): 1 => 3 => 2 
 not possible in the other way because 2 do not follow someone"""
 
 
