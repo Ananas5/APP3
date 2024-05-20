@@ -81,8 +81,8 @@ def BFS(graph, vertex, node):
             if v==node:
                 done.append(node)
                 return done
-            #verrify that we didn't already saw the node
-            #AND in directed graph: verrify that the node follows someone 
+            #verify that we didn't already se the node
+            #AND in directed graph: verify that the node follows someone 
             elif v not in done and v in list(graph.keys()): 
                 to_study.append(v)
                 done.append(v)
