@@ -51,16 +51,37 @@ print("Top two leaders:", top_two_leaders)
 #question 3
 # Identify the best followers
 all_nodes = set(dic.keys())
-follower_candidates = all_nodes - set(top_two_leaders)  # Exclude top leaders
-follower_importance = {node: degree_centrality[node] for node in follower_candidates}
-best_followers = sorted(follower_importance, key=follower_importance.get, reverse=True)
+follower_candidates = all_nodes - set(top_two_leaders)
+follower_degrees = {node: node_degrees[node - 1] for node in follower_candidates}
+best_followers = sorted(follower_degrees, key=follower_degrees.get, reverse=True)
 print("Best followers:", best_followers)
 
 #question4
 # Best path 
-leader1, leader2 = top_two_leaders
-shortest_path = nx.shortest_path(G, source=leader1-1, target=leader2-1)  # Adjust node indexing
-print("Shortest path between the two leaders:", shortest_path)
+def bfs_shortest_path(adj_matrix, start, goal):
+    queue = [(start, [start])]
+    visited = set()
+    while queue:
+        (vertex, path) = queue.pop(0)
+        if vertex in visited:
+            continue
+        for next in range(len(adj_matrix[vertex])):
+            if adj_matrix[vertex][next] == 1:
+                if next == goal:
+                    return path + [next]
+                else:
+                    queue.append((next, path + [next]))
+        visited.add(vertex)
+    return None
+
+#in case there is a 0 indexing
+
+leader1, leader2 = top_two_leaders - 1
+shortest_path = bfs_shortest_path(adjacency_matrix, leader1, leader2)
+print("Shortest path between the two leaders:", [node + 1 for node in shortest_path])
+
+
+
 
 #Question 5
 
