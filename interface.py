@@ -335,19 +335,8 @@ class Window(QMainWindow):
         self.graph.canvas.figure.clear()
         if self.direct:
             G=nx.DiGraph()
-            """options = {
-               'node_size': 60,
-               'width': 0.5,
-               'font_size':10,
-               'arrowstyle': '-|>',
-               'arrowsize': 8}"""
         else:           
             G=nx.Graph()
-            """
-            options = {
-               'node_size': 60,
-               'width': 0.5,
-               'font_size':10}"""
 
         for i in self.dic:
             for j in self.dic[i]:
@@ -366,7 +355,7 @@ class Window(QMainWindow):
                         color.append("pink")
                 else:
                     color.append("cyan")
-           
+               
             #information path = best path between the 2 best leaders
             #if no path paht=None and no path is displayed
             path=None    
@@ -378,7 +367,7 @@ class Window(QMainWindow):
             else:
                 path= not_o_BFS(self.dic,best_best[0],best_best[1])
                 #path==None no path between best leaders
-              
+                 
             if path!=None:
                 color_e=[]
                 for edges in G.edges():
@@ -392,11 +381,11 @@ class Window(QMainWindow):
                         color_e.append("black")
             else:
                 color_e="black"
-                
+                    
         else:
             color_e="black"
             color="cyan"
-        
+            
         nx.draw_networkx(G, pos=nx.circular_layout(G),arrows=True, node_color=color, edge_color=color_e, with_labels=True)
         self.graph.canvas.draw()
         self.graph.showMaximized()
