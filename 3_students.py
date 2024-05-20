@@ -1,8 +1,6 @@
 import numpy as np
 import networkx as nx
 
-############Still need to do qt about shortest path between 5 best followers!!!!!!!!!!!!!!!!
-
 file=open("students.csv","r")
 lines=file.readlines()
 dic={}
@@ -160,21 +158,30 @@ def bestFollowers(fol):
 bOF= bestFollowers(fol)        
 '''The 5 best followers are 94, 101, 105, 129, 135'''            
 
-def BFS(graph, vertex):
-    to_study=[vertex]
-    done=[vertex]
+def BFS(graph, bOF):
+    to_study=[bOF[0]]
+    done=[bOF[0]]
+            
+    found= 1
+    
     while to_study!=[]:
         s=to_study.pop(0)
+        node= bOF[found]
         for v in graph[s]:
-            #verrify that we didn't already saw the node
-            #AND in directed graph: verrify that the node follows someone 
-            if v not in done and v in list(graph.keys()): 
+            print(v)
+            #because we are searching for the shortest path between the best 5 followers, westop when we found those 5 elements
+            if found== 5:
+                return done
+            if v==node:
+                done.append(node)
+                found+=1
+            elif v not in done and v in list(graph.keys()): 
                 to_study.append(v)
                 done.append(v)
-    return done
-print(BFS(dic,1)) #path
-"""shortest path between the two leaders (1 an 2): 1 => 3 => 2 
-not possible in the other way because 2 do not follow someone"""
+    return "No path between your nodes try in the other direction"
+    
+print(BFS(dic,bOF)) #path
+"""shortest path between the best followers does not exist because follower 141 is not followed by anyone"""
 
 
 G=nx.DiGraph()
