@@ -3,6 +3,7 @@ import networkx as nx
 
 
 file=open("anybeatAnonymized.csv","r")
+#file=open("example.csv","r")
 lines=file.readlines()
 
 dic={}
@@ -34,7 +35,7 @@ def degrees(adj):
     return deg
         
 deg=degrees(adj)
-print("number of neighboors: ", deg)
+#print("number of neighboors: ", deg)
 
 def best_leaders(deg,n): #n = number of best leaders
     best=[(0,0)]*n #(node value, node degree)
@@ -50,7 +51,7 @@ def best_leaders(deg,n): #n = number of best leaders
     return best
 
 best=best_leaders(deg,2)
-print("(best leaders, number of followers): ", best)
+#print("(best leaders, number of followers): ", best)
 
 def followers (adj,node): #neighboors
     folo=[]
@@ -67,41 +68,126 @@ def followers_leaders (adj,best_lead):
     return folo
 
 fol=followers_leaders(adj, best)
-print("followers of best leaders: ", fol)
-
-def BFS(adj, node):
-    to_study=[node]
-    done={node:0} #0 distance
-    while to_study!=[]:
-        s=to_study.pop(0)
-        for v in followers(adj,s):
-            #verrify that we didn't already saw the node
-            
-            if v not in done:
-                to_study.append(v)
-                done[v]=done[s]+1 #distance
-    return done, s #dico nodes:distance, last node visited (farthest node)
+#print("followers of best leaders: ", fol)
 
 """To found the longest (most important) path using two BFSs.
 We start BFS from any node x (for example 1) and find a node with the longest distance from x (the endpoint)
 We use a second BFS from this endpoint to find the longest path."""
-bfs1=BFS(adj,1)
-bfs2=BFS(adj,bfs1[1])
-print("Most important path in the graph from", bfs1[1], "to", bfs2[1], "with a distance of: ", bfs2[0][bfs2[1]] )
+def BFS(adj, start_node):
+    to_study = [start_node]
+    done = {start_node: 0}
+    parent = {start_node: None}
+    
+    while to_study:
+        s = to_study.pop(0)
+        for v in followers(adj, s):
+            if v not in done:
+                to_study.append(v)
+                done[v] = done[s] + 1
+                parent[v] = s
+    
+    farthest_node = max(done, key=done.get)
+    return done, farthest_node, parent
 
+#to get the path from parent dictionary
+def get_path(parent, start_node, end_node):
+    path = []
+    node = end_node
+    while node is not None:
+        path.append(node)
+        node = parent[node]
+    path.reverse()
+    return path
+#there is more than one longest path, so if you run it again you will have a different result, but same length
+bfs1 = BFS(adj, 1)
+bfs2 = BFS(adj, bfs1[1])
+print("Most important path in the graph is from", bfs1[1], "to", bfs2[1], "with a distance of: ", bfs2[0][bfs2[1]])
+
+longest_path = get_path(bfs2[2], bfs1[1], bfs2[1])
+print(longest_path)
+
+   
 G=nx.Graph()
+
 for i in dic:
     for j in dic[i]:
         G.add_edge(i,j)
+        
+import plotly.graph_objs as go
+from networkx.drawing.layout import spring_layout
 
-options = {
-    'node_size': 1,
-    'width': 0.05,
-    'font_size':10,
-    'node_color': 'cyan'}
+#choose to do an interactive graph because it was to big
+pos = spring_layout(G)
 
-nx.draw_networkx(G,with_labels=False, **options)
 
-"""It's hard to read the graph
-Need to display the path"""
-   
+edge_x = []
+edge_y = []
+for edge in G.edges():
+    x0, y0 = pos[edge[0]]
+    x1, y1 = pos[edge[1]]
+    edge_x += [x0, x1, None]
+    edge_y += [y0, y1, None]
+
+edge_trace = go.Scatter(
+    x=edge_x,
+    y=edge_y,
+    line=dict(width=0.5, color='grey'),
+    hoverinfo='none',
+    mode='lines'
+)
+color_nodes=[]
+node_x = []
+node_y = []
+node_text = []
+for node in G.nodes():
+    if node in longest_path:
+        color_nodes.append("red")
+    else:
+        color_nodes.append("cyan")
+    x, y = pos[node]
+    node_x.append(x)
+    node_y.append(y)
+    node_text.append(str(node))
+
+node_trace = go.Scatter(
+    x=node_x,
+    y=node_y,
+    text=node_text,
+    mode='markers',
+    hoverinfo='text',
+    marker=dict(
+        color=color_nodes,
+        size=10
+    )
+)
+
+
+path_x = []
+path_y = []
+for i in range(len(longest_path) - 1):
+    x0, y0 = pos[longest_path[i]]
+    x1, y1 = pos[longest_path[i + 1]]
+    path_x += [x0, x1, None]
+    path_y += [y0, y1, None]
+
+path_trace = go.Scatter(
+    x=path_x,
+    y=path_y,
+    line=dict(width=2, color='red'),  #different edge color
+    hoverinfo='none',
+    mode='lines'
+)
+
+fig = go.Figure(data=[edge_trace, node_trace, path_trace],
+                layout=go.Layout(
+                    title='<br>Graph',
+                    showlegend=False,
+                    hovermode='closest',
+                    margin=dict(b=20, l=5, r=5, t=40),
+                    xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+                    yaxis=dict(showgrid=False, zeroline=False, showticklabels=False))
+                )
+
+fig.write_html("network_graph.html")
+
+  
